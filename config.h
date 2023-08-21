@@ -48,7 +48,7 @@ static const char *const autostart[] = {
 
 /* tagging */
 //static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tags[] = {"α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι"}; //replace boring numbers with greek alphabet
+static const char *tags[] = {"α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι", "κ"}; //replace boring numbers with greek alphabet
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -108,8 +108,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY,                       XK_minus,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_minus,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
@@ -123,6 +123,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
+	TAGKEYS(                        XK_0,                      9)
 	{ MODKEY|Mod1Mask,					    XK_q,      quit,           {0} },
 };
 
