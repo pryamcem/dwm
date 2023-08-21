@@ -31,15 +31,24 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
-	"kitty", NULL,
+	//Set touchpad and trackpad settings
+	"xinput", "set-prop", "Elan Touchpad", "libinput Accel Speed", "0.3", NULL,
+	"xinput", "set-prop", "12", "325", "-0.6", NULL,
+	"xsetroot", "-cursor_name" ,"left-ptr", NULL,
+	//Set keyboard layout
 	"setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle,grp_led:caps", NULL,
+	//Autostart some apps
+	"xfce4-power-manager", NULL,
 	"xfce4-clipman", NULL,
+	"nm-applet", NULL,
+	//Set wallpaper
+	"feh", "--bg-fill", "/home/pryamcem/.wallpapers/Fantastic_world_4410891.jpg", NULL,
 	NULL /* terminate */
 };
 
 /* tagging */
 //static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tags[] = {"α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι"};
+static const char *tags[] = {"α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι"}; //replace boring numbers with greek alphabet
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -47,7 +56,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Blender",  NULL,       NULL,       0,            1,           -1 },
+	{ "Gcolor3",  NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
