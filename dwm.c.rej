@@ -1,47 +1,46 @@
 --- dwm.c
 +++ dwm.c
-@@ -232,6 +257,7 @@ static void seturgent(Client *c, int urg);
- static void showhide(Client *c);
- static void sigchld(int unused);
- static void spawn(const Arg *arg);
-+static Monitor *systraytomon(Monitor *m);
- static void tag(const Arg *arg);
- static void tagmon(const Arg *arg);
- static void tile(Monitor *m);
-@@ -249,18 +275,23 @@ static int updategeom(void);
- static void updatenumlockmask(void);
- static void updatesizehints(Client *c);
- static void updatestatus(void);
-+static void updatesystray(void);
-+static void updatesystrayicongeom(Client *i, int w, int h);
-+static void updatesystrayiconstate(Client *i, XPropertyEvent *ev);
- static void updatetitle(Client *c);
- static void updatewindowtype(Client *c);
- static void updatewmhints(Client *c);
- static void view(const Arg *arg);
- static Client *wintoclient(Window w);
- static Monitor *wintomon(Window w);
-+static Client *wintosystrayicon(Window w);
- static int xerror(Display *dpy, XErrorEvent *ee);
- static int xerrordummy(Display *dpy, XErrorEvent *ee);
- static int xerrorstart(Display *dpy, XErrorEvent *ee);
- static void zoom(const Arg *arg);
- 
- /* variables */
-+static Systray *systray = NULL;
- static const char broken[] = "broken";
- static char stext[256];
- static int screen;
-@@ -874,8 +971,11 @@ expose(XEvent *e)
- 	Monitor *m;
- 	XExposeEvent *ev = &e->xexpose;
- 
--	if (ev->count == 0 && (m = wintomon(ev->window)))
-+	if (ev->count == 0 && (m = wintomon(ev->window))) {
- 		drawbar(m);
-+		if (m == selmon)
-+			updatesystray();
+@@ -393,9 +393,24 @@ arrange(Monitor *m)
+ void
+ arrangemon(Monitor *m)
+ {
++	int n = 0;
++	Client *c;
+ 	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
+-	if (m->lt[m->sellt]->arrange)
+-		m->lt[m->sellt]->arrange(m);
++	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
++	if ((m->lt[m->sellt]->arrange != monocle && n > 1) || !m->lt[m->sellt]->arrange) {
++		for (c = m->clients; c; c = c->next) {
++			if (ISVISIBLE(c) && (!m->lt[m->sellt]->arrange || !c->isfloating) && (c->bw != borderpx)) {
++				c->oldbw = c->bw;
++				c->bw = borderpx;
++				resizeclient(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw));
++			}
++		}
++		if (m->lt[m->sellt]->arrange) {
++			m->lt[m->sellt]->arrange(m);
++		}
++	} else {
++		monocle(m);
 +	}
  }
  
  void
+@@ -1715,9 +1739,14 @@ togglefloating(const Arg *arg)
+ 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
+ 		return;
+ 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
+-	if (selmon->sel->isfloating)
++	if (selmon->sel->isfloating) {
++		if (selmon->sel->bw != borderpx) {
++			selmon->sel->oldbw = selmon->sel->bw;
++			selmon->sel->bw = borderpx;
++		}
+ 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+-		       selmon->sel->w, selmon->sel->h, 0);
++		       selmon->sel->w - selmon->sel->bw * 2, selmon->sel->h - selmon->sel->bw * 2, 0);
++	}
+ 	arrange(selmon);
+ }
+ 
