@@ -87,12 +87,22 @@ static const Layout layouts[] = {
 /* commands */
 //static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *roficmd[] = { "rofi", "-drun", "-show", "drun", NULL };
-static const char *termcmd[]  = { "kitty", NULL };
+static const char *termcmd[] = { "kitty", NULL };
+static const char *clipman[] = { "xfce4-popup-clipman", NULL };
+static const char *raiseVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
+static const char *lowerVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
+static const char *muteVolume[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
+static const char *muteMicVolume[] = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ ControlMask,					        XK_Tab,    spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_c,			 spawn,          {.v = clipman } },
+	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = raiseVolume } },
+	{ 0,														XF86XK_AudioLowerVolume,	spawn,         {.v = lowerVolume } },
+	{ 0,														XF86XK_AudioMute,					spawn,         {.v = muteVolume } },
+	{ 0,														XF86XK_AudioMicMute,			spawn,         {.v = muteMicVolume } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
