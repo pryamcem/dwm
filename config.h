@@ -10,6 +10,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const int user_bh            = 20;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
  /*   Display modes of the tab bar: never shown, always shown, shown only in  */
  /*   monocle mode in presence of several windows.                            */
  /*   A mode can be disabled by moving it after the showtab_nmodes end marker */
@@ -17,7 +18,7 @@ enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always
 static const int showtab            = showtab_auto; /* Default tab bar show mode  */
 static const Bool toptab            = True;         /* False means bottom tab bar */
 
-static const char *fonts[]          = { "monospace:size=10" };
+static const char *fonts[]          = { "Comic Code:size=11" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#1d2021";
 static const char col_gray2[]       = "#32302f";
@@ -62,10 +63,9 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gcolor3",  NULL,       NULL,       0,            1,           -1 },
-	//{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
-	{ NULL,  "music.youtube.com",       NULL,       1 << 9,       0,           -1 },
+	/* class      instance					 title       tags mask     isfloating   monitor */
+	{ "Gcolor3",  NULL,							 NULL,       0,            1,           -1 },
+	{ NULL,  "music.youtube.com",    NULL,			 1 << 9,       0,           -1 },
 };
 
 /* layout(s) */
@@ -96,6 +96,8 @@ static const Layout layouts[] = {
 //static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *roficmd[] = { "rofi", "-drun", "-show", "drun", NULL };
 static const char *termcmd[] = { "kitty", NULL };
+static const char *filecmd[] = { "firefox", NULL };
+static const char *webcmd[] = { "firefox", NULL };
 static const char *clipman[] = { "xfce4-popup-clipman", NULL };
 static const char *raiseVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
 static const char *lowerVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
@@ -108,6 +110,8 @@ static const Key keys[] = {
 	{ ControlMask,					        XK_Tab,    spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_c,			 spawn,          {.v = clipman } },
+	{ MODKEY,                       XK_F2,		 spawn,          {.v = filecmd } },
+	{ MODKEY,                       XK_F3,		 spawn,          {.v = webcmd } },
 	{ MODKEY,                       XK_F4,		 spawn,          {.v = ytMusiccmd } },
 	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = raiseVolume } },
 	{ 0,														XF86XK_AudioLowerVolume,	spawn,         {.v = lowerVolume } },
