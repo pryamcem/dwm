@@ -1,46 +1,32 @@
 --- dwm.c
 +++ dwm.c
-@@ -393,9 +393,24 @@ arrange(Monitor *m)
- void
- arrangemon(Monitor *m)
- {
-+	int n = 0;
-+	Client *c;
- 	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, sizeof m->ltsymbol);
--	if (m->lt[m->sellt]->arrange)
--		m->lt[m->sellt]->arrange(m);
-+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-+	if ((m->lt[m->sellt]->arrange != monocle && n > 1) || !m->lt[m->sellt]->arrange) {
-+		for (c = m->clients; c; c = c->next) {
-+			if (ISVISIBLE(c) && (!m->lt[m->sellt]->arrange || !c->isfloating) && (c->bw != borderpx)) {
-+				c->oldbw = c->bw;
-+				c->bw = borderpx;
-+				resizeclient(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw));
-+			}
-+		}
-+		if (m->lt[m->sellt]->arrange) {
-+			m->lt[m->sellt]->arrange(m);
-+		}
-+	} else {
-+		monocle(m);
-+	}
- }
+@@ -707,7 +707,7 @@ drawbar(Monitor *m)
  
- void
-@@ -1715,9 +1739,14 @@ togglefloating(const Arg *arg)
- 	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
- 		return;
- 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
--	if (selmon->sel->isfloating)
-+	if (selmon->sel->isfloating) {
-+		if (selmon->sel->bw != borderpx) {
-+			selmon->sel->oldbw = selmon->sel->bw;
-+			selmon->sel->bw = borderpx;
-+		}
- 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
--		       selmon->sel->w, selmon->sel->h, 0);
-+		       selmon->sel->w - selmon->sel->bw * 2, selmon->sel->h - selmon->sel->bw * 2, 0);
-+	}
- 	arrange(selmon);
- }
+ 	/* draw status first so it can be overdrawn by tags later */
+ 	if (m == selmon) { /* status is only drawn on selected monitor */
+-		drw_setscheme(drw, scheme[SchemeNorm]);
++		drw_setscheme(drw, scheme[SchemeStatus]);
+ 		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
+ 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
+ 	}
+@@ -729,17 +729,17 @@ drawbar(Monitor *m)
+ 		x += w;
+ 	}
+ 	w = blw = TEXTW(m->ltsymbol);
+-	drw_setscheme(drw, scheme[SchemeNorm]);
++	drw_setscheme(drw, scheme[SchemeTagsNorm]);
+ 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
  
+ 	if ((w = m->ww - tw - x) > bh) {
+ 		if (m->sel) {
+-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
++			drw_setscheme(drw, scheme[m == selmon ? SchemeInfoSel : SchemeInfoNorm]);
+ 			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
+ 			if (m->sel->isfloating)
+ 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
+ 		} else {
+-			drw_setscheme(drw, scheme[SchemeNorm]);
++			drw_setscheme(drw, scheme[SchemeInfoNorm]);
+ 			drw_rect(drw, x, 0, w, bh, 1, 1);
+ 		}
+ 	}
