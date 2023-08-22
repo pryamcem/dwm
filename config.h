@@ -55,7 +55,7 @@ static const char *const autostart[] = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-//static const char *tags[] = {"α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι", "κ"}; //replace boring numbers with greek alphabet
+//static const char *tags[] = { "α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι", "κ" }; //replace boring numbers with greek alphabet
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -64,7 +64,8 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gcolor3",  NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	//{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ NULL,  "music.youtube.com",       NULL,       1 << 9,       0,           -1 },
 };
 
 /* layout(s) */
@@ -100,12 +101,14 @@ static const char *raiseVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@
 static const char *lowerVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
 static const char *muteVolume[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
 static const char *muteMicVolume[] = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
+static const char *ytMusiccmd[] = { "chromium", "--app=https://music.youtube.com", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ ControlMask,					        XK_Tab,    spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_c,			 spawn,          {.v = clipman } },
+	{ MODKEY,                       XK_F4,		 spawn,          {.v = ytMusiccmd } },
 	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = raiseVolume } },
 	{ 0,														XF86XK_AudioLowerVolume,	spawn,         {.v = lowerVolume } },
 	{ 0,														XF86XK_AudioMute,					spawn,         {.v = muteVolume } },
