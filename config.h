@@ -10,7 +10,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int user_bh            = 18;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int user_bh            = 20;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
  /*   Display modes of the tab bar: never shown, always shown, shown only in  */
  /*   monocle mode in presence of several windows.                            */
  /*   A mode can be disabled by moving it after the showtab_nmodes end marker */
@@ -46,7 +46,6 @@ static const char *const autostart[] = {
 	//Set keyboard layout
 	"setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle,grp_led:caps", NULL,
 	//Autostart some apps
-	"dwmblocks", NULL,
 	"xfce4-power-manager", NULL,
 	"xfce4-clipman", NULL,
 	"nm-applet", NULL,
@@ -97,7 +96,7 @@ static const Layout layouts[] = {
 //static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *roficmd[] = { "rofi", "-drun", "-show", "drun", NULL };
 static const char *termcmd[] = { "kitty", NULL };
-static const char *filecmd[] = { "thunar", NULL };
+static const char *filecmd[] = { "firefox", NULL };
 static const char *webcmd[] = { "firefox", NULL };
 static const char *clipman[] = { "xfce4-popup-clipman", NULL };
 static const char *raiseVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
@@ -111,8 +110,8 @@ static const Key keys[] = {
 	{ ControlMask,					        XK_Tab,    spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_c,			 spawn,          {.v = clipman } },
-	{ MODKEY,                       XK_F2,		 spawn,          {.v = webcmd } },
-	{ MODKEY,                       XK_F3,		 spawn,          {.v = filecmd } },
+	{ MODKEY,                       XK_F2,		 spawn,          {.v = filecmd } },
+	{ MODKEY,                       XK_F3,		 spawn,          {.v = webcmd } },
 	{ MODKEY,                       XK_F4,		 spawn,          {.v = ytMusiccmd } },
 	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = raiseVolume } },
 	{ 0,														XF86XK_AudioLowerVolume,	spawn,         {.v = lowerVolume } },
@@ -121,8 +120,6 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
