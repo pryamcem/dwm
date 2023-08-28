@@ -18,28 +18,31 @@ enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always
 static const int showtab            = showtab_auto; /* Default tab bar show mode  */
 static const Bool toptab            = True;         /* False means bottom tab bar */
 
-static const char *fonts[]          = { "Comic Code:size=11" };
+static const char *fonts[]          = { "CaskaydiaCove Nerd Font:size=11" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#1d2021";
 static const char col_gray2[]       = "#32302f";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
+static const char col_fg[]					= "#fbf1c7";
 static const char col_cyan[]        = "#005577";
-static const char col_green[]        = "#b8bb26";
+static const char col_green[]       = "#b8bb26";
 static const char col_urgborder[]   = "#ff0000";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray1 },
-	[SchemeSel]  = { col_gray4, col_green,  col_green},
-	[SchemeUrg]  = { col_gray4, col_cyan,  col_urgborder  },
-	[SchemeStatus]  = { col_gray3, col_gray1,  "#000000"  }, // Statusbar right {text,background,not used but cannot be empty}
-	[SchemeTagsSel]  = { col_gray4, col_cyan,  "#000000"  }, // Tagbar left selected {text,background,not used but cannot be empty}
-	[SchemeTagsNorm]  = { col_gray3, col_gray1,  "#000000"  }, // Tagbar left unselected {text,background,not used but cannot be empty}
-	[SchemeInfoSel]  = { col_gray4, col_gray2,  "#000000"  }, // infobar middle  selected {text,background,not used but cannot be empty}
-	[SchemeInfoNorm]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
+	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+	[SchemeSel]  = { col_gray1, col_green,  col_green},
+	[SchemeUrg]  = { col_urgborder, col_green,  col_urgborder  },
+	[SchemeStatus]  = { col_fg, col_gray1,  "#000000"  }, // Statusbar right {text,background,not used but cannot be empty}
+	[SchemeTagsSel]  = { col_gray1, col_green,  "#000000"  }, // Tagbar left selected {text,background,not used but cannot be empty}
+	[SchemeTagsNorm]  = { col_fg, col_gray1,  "#000000"  }, // Tagbar left unselected {text,background,not used but cannot be empty}
+	[SchemeInfoSel]  = { col_fg, col_gray2,  "#000000"  }, // infobar middle  selected {text,background,not used but cannot be empty}
+	[SchemeInfoNorm]  = { col_fg, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
 };
 
 static const char *const autostart[] = {
+	//Set wallpaper
+	"feh", "--bg-fill", "/home/pryamcem/.wallpapers/anton-poznyak-6RcfAYSDBpk-unsplash.jpg", NULL,
 	//Set touchpad and trackpad settings
 	"xinput", "set-prop", "Elan Touchpad", "libinput Accel Speed", "0.3", NULL,
 	"xinput", "set-prop", "12", "325", "-0.6", NULL,
@@ -51,8 +54,7 @@ static const char *const autostart[] = {
 	"xfce4-power-manager", NULL,
 	"xfce4-clipman", NULL,
 	"nm-applet", NULL,
-	//Set wallpaper
-	"feh", "--bg-fill", "/home/pryamcem/.wallpapers/Fantastic_world_4410891.jpg", NULL,
+	"pa-notify", NULL,
 	NULL /* terminate */
 };
 
@@ -67,6 +69,9 @@ static const Rule rules[] = {
 	 */
 	/* class      instance					 title       tags mask     isfloating   monitor */
 	{ "Gcolor3",  NULL,							 NULL,       0,            1,           -1 },
+	{ "Brave",    NULL,							 NULL,       1 << 1,       0,           -1 },
+	{ "TelegramDesktop",    NULL,		 NULL,       1 << 8,       0,           -1 },
+	{ "Lollypop", NULL,							 NULL,       1 << 9,       0,           -1 },
 	{ NULL,  "music.youtube.com",    NULL,			 1 << 9,       0,           -1 },
 };
 
@@ -99,14 +104,25 @@ static const Layout layouts[] = {
 static const char *roficmd[] = { "rofi", "-drun", "-show", "drun", NULL };
 static const char *termcmd[] = { "kitty", NULL };
 static const char *filecmd[] = { "thunar", NULL };
-static const char *webcmd[] = { "firefox", NULL };
+static const char *webcmd[] = { "brave", NULL };
 static const char *clipman[] = { "xfce4-popup-clipman", NULL };
+static const char *statusUpdate[] = { "/home/pryamcem/.config/dwmblocks/scripts/sb-update-all", NULL };
+
 static const char *raiseVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
 static const char *lowerVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
 static const char *muteVolume[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
 static const char *muteMicVolume[] = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
-static const char *ytMusiccmd[] = { "chromium", "--app=https://music.youtube.com", NULL };
+static const char *ytMusiccmd[] = { "brave", "--app=https://music.youtube.com", NULL };
 
+static const char *updateVolume[] = { "pkill", "-RTMIN+10", "dwmblocks", NULL };
+
+static const char *scrSelectBuffer[] = {"/home/pryamcem/.config/dwm/scripts/screenshot", "select", NULL};
+static const char *scrAllBuffer[] = {"/home/pryamcem/.config/dwm/scripts/screenshot", NULL};
+static const char *scrWindowBuffer[] = {"/home/pryamcem/.config/dwm/scripts/screenshot", "window", NULL};
+
+static const char *rofiExit[] = {"/home/pryamcem/.local/bin/rofiexit", NULL};
+
+#define PrScrDWM	    0x0000ff61
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ ControlMask,					        XK_Tab,    spawn,          {.v = roficmd } },
@@ -115,10 +131,24 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_F2,		 spawn,          {.v = webcmd } },
 	{ MODKEY,                       XK_F3,		 spawn,          {.v = filecmd } },
 	{ MODKEY,                       XK_F4,		 spawn,          {.v = ytMusiccmd } },
+
+	{ MODKEY,                       XK_u,		   spawn,          {.v = statusUpdate } },
+
+	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = updateVolume } },
 	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = raiseVolume } },
+
+	{ 0,														XF86XK_AudioLowerVolume,	spawn,         {.v = updateVolume } },
 	{ 0,														XF86XK_AudioLowerVolume,	spawn,         {.v = lowerVolume } },
+
+	{ 0,														XF86XK_AudioMute,					spawn,         {.v = updateVolume } },
 	{ 0,														XF86XK_AudioMute,					spawn,         {.v = muteVolume } },
+
 	{ 0,														XF86XK_AudioMicMute,			spawn,         {.v = muteMicVolume } },
+
+	{ ControlMask|ShiftMask,    XK_Print,		   spawn,          {.v = scrSelectBuffer } },
+	{ ShiftMask,								XK_Print,		   spawn,          {.v = scrAllBuffer } },
+	{ Mod1Mask|ShiftMask,				XK_Print,		   spawn,          {.v = scrWindowBuffer } },
+
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -131,9 +161,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0] } },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1] } },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2] } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_minus,      view,           {.ui = ~0 } },
@@ -153,7 +183,8 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	TAGKEYS(                        XK_0,                      9)
-	{ MODKEY|Mod1Mask,					    XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,					    XK_e,      spawn,           {.v = rofiExit} },
+	{ MODKEY|Mod1Mask,					    XK_e,      quit,           {0} },
 };
 
 /* button definitions */

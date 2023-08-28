@@ -1,0 +1,16 @@
+#!/bin/bash
+
+  #postfix=" ~/Pictures/Screenshot-$(date \"+%d-%m-%y_%s\").png"
+
+case $1 in
+  select)
+    maim --select | xclip -selection clipboard -t image/png
+    ;;
+  window)
+    maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+    ;;
+  *)
+    maim | xclip -selection clipboard -t image/png
+    ;;
+esac
+
