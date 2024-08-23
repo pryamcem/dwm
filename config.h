@@ -41,10 +41,11 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
+	//"/home/pryamcem/.local/bin/pixel-lock", NULL,
 	//Set wallpaper
-	"feh", "--bg-fill", "/home/pryamcem/.wallpapers/anton-poznyak-6RcfAYSDBpk-unsplash.jpg", NULL,
+	"feh", "--bg-fill", "/home/pryamcem/.wallpapers/pawel-czerwinski-IskA3TGmyGk-unsplash.jpg", NULL,
 	//Set touchpad and trackpad settings
-	"xinput", "set-prop", "Elan Touchpad", "libinput Accel Speed", "0.3", NULL,
+	"xinput", "set-prop", "Elan Touchpad", "libinput Accel Speed", "0.4", NULL,
 	"xinput", "set-prop", "12", "325", "-0.6", NULL,
 	"xsetroot", "-cursor_name" ,"left-ptr", NULL,
 	//Set keyboard layout
@@ -55,6 +56,7 @@ static const char *const autostart[] = {
 	"xfce4-clipman", NULL,
 	"nm-applet", NULL,
 	"pa-notify", NULL,
+	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1", NULL, 
 	NULL /* terminate */
 };
 
@@ -69,7 +71,9 @@ static const Rule rules[] = {
 	 */
 	/* class      instance					 title       tags mask     isfloating   monitor */
 	{ "Gcolor3",  NULL,							 NULL,       0,            1,           -1 },
-	{ "Brave",    NULL,							 NULL,       1 << 1,       0,           -1 },
+	//{ "my-notes", NULL,							 NULL,       0,            1,           -1 },
+	{ "mpv",      NULL,							 NULL,       0,            1,           -1 },
+	//{ "Brave",    NULL,							 NULL,       1 << 1,       0,           -1 },
 	{ "TelegramDesktop",    NULL,		 NULL,       1 << 8,       0,           -1 },
 	{ "Lollypop", NULL,							 NULL,       1 << 9,       0,           -1 },
 	{ NULL,  "music.youtube.com",    NULL,			 1 << 9,       0,           -1 },
@@ -85,7 +89,7 @@ static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ "[T]",      monocle },
 };
 
 /* key definitions */
@@ -112,7 +116,7 @@ static const char *raiseVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@
 static const char *lowerVolume[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
 static const char *muteVolume[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
 static const char *muteMicVolume[] = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
-static const char *ytMusiccmd[] = { "brave", "--app=https://music.youtube.com", NULL };
+
 
 static const char *updateVolume[] = { "pkill", "-RTMIN+10", "dwmblocks", NULL };
 
@@ -122,6 +126,10 @@ static const char *scrWindowBuffer[] = {"/home/pryamcem/.config/dwm/scripts/scre
 
 static const char *rofiExit[] = {"/home/pryamcem/.local/bin/rofiexit", NULL};
 
+static const char *ytMusicExec[] = { "brave", "--app=https://music.youtube.com", NULL };
+static const char *deezerExec[] = { "brave", "--app=https://deezer.com", NULL };
+static const char *myNotesExec[] = {"kitty", "--class", "my-notes", "vim", "-c", "VimwikiIndex", NULL};
+
 #define PrScrDWM	    0x0000ff61
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -130,9 +138,12 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_c,			 spawn,          {.v = clipman } },
 	{ MODKEY,                       XK_F2,		 spawn,          {.v = webcmd } },
 	{ MODKEY,                       XK_F3,		 spawn,          {.v = filecmd } },
-	{ MODKEY,                       XK_F4,		 spawn,          {.v = ytMusiccmd } },
+	{ MODKEY,                       XK_F4,		 spawn,          {.v = ytMusicExec } },
+	//{ MODKEY,                       XK_F4,		 spawn,          {.v = deezerExec } },
+	{ MODKEY,                       XK_n,		   spawn,          {.v = myNotesExec } },
 
 	{ MODKEY,                       XK_u,		   spawn,          {.v = statusUpdate } },
+
 
 	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = updateVolume } },
 	{ 0,														XF86XK_AudioRaiseVolume,	spawn,				 {.v = raiseVolume } },
